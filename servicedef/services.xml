@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright 2001-2006 The Apache Software Foundation
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not
+use this file except in compliance with the License. You may obtain a copy of
+the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+License for the specific language governing permissions and limitations
+under the License.
+-->
+
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/services.xsd">
+	<description>OFBiz Service Engine Services</description>
+	<vendor>OFBiz</vendor>
+	<version>1.0</version>
+
+    <!-- Service Engine Services -->
+	<service name="purgeOldJobs" engine="java"
+            location="org.ofbiz.service.ServiceUtil" invoke="purgeOldJobs" auth="true" use-transaction="false">
+		<description>Cleans out old jobs which have been around longer then what is defined in serviceengine.xml</description>
+        <required-permissions join-type="AND">
+            <check-permission permission="SERVICE_INVOKE_ANY"/>
+        </required-permissions>
+        <!-- this service has no attributes -->
+	</service>
+
+    <service name="cancelScheduledJob" engine="java"
+            location="org.ofbiz.service.ServiceUtil" invoke="cancelJob" auth="true">
+        <description>Cancels a schedule job</description>
+        <required-permissions join-type="AND">
+            <check-permission permission="SERVICE_INVOKE_ANY"/>
+        </required-permissions>
+        <auto-attributes entity-name="JobSandbox" include="pk" mode="IN" optional="false"/>
+        <attribute name="cancelDateTime" type="Timestamp" mode="OUT" optional="false"/>
+    </service>
+
+    <service name="cancelJobRetries" engine="java"
+            location="org.ofbiz.service.ServiceUtil" invoke="cancelJobRetries" auth="true">
+        <description>Cancels a job retry flag</description>
+        <required-permissions join-type="AND">
+            <check-permission permission="SERVICE_INVOKE_ANY"/>
+        </required-permissions>
+        <auto-attributes entity-name="JobSandbox" include="pk" mode="IN" optional="false"/>        
+    </service>
+
+    <!-- Service Engine Interfaces -->
+    <service name="serviceEcaConditionInterface" engine="interface" location="" invoke="">
+        <description>Interface to describe services which are used as SECA conditions</description>
+        <attribute name="serviceContext" type="Map" mode="IN"/>
+        <attribute name="serviceName" type="String" mode="IN"/>
+        <attribute name="conditionReply" type="Boolean" mode="OUT"/>
+    </service>
+    <service name="serviceMcaConditionInterface" engine="interface" location="" invoke="">
+        <description>Interface to describe services which are used as SMCA conditions</description>
+        <attribute name="messageWrapper" type="org.ofbiz.service.mail.MimeMessageWrapper" mode="IN"/>
+        <attribute name="conditionReply" type="Boolean" mode="OUT"/>
+    </service>
+
+    <service name="mailProcessInterface" engine="interface" location="" invoke="">
+        <description>Interface to describe services used to process incoming email</description>
+        <attribute name="messageWrapper" type="org.ofbiz.service.mail.MimeMessageWrapper" mode="IN"/>
+    </service>
+</services>
