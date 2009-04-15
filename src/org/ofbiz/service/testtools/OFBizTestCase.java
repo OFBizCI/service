@@ -16,28 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
-package org.ofbiz.service.test;
 
-import java.util.Map;
+package org.ofbiz.service.testtools;
 
-import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.service.ModelService;
-import org.ofbiz.service.testtools.OFBizTestCase;
+import org.ofbiz.entity.testtools.EntityTestCase;
+import org.ofbiz.service.LocalDispatcher;
 
-public class ServiceEngineTests extends OFBizTestCase {
+public class OFBizTestCase extends EntityTestCase {
 
-    public ServiceEngineTests(String name) {
+    protected LocalDispatcher dispatcher = null;
+    
+    public LocalDispatcher getDispatcher() {
+        return dispatcher;
+    }
+
+    public OFBizTestCase(String name) {
         super(name);
     }
 
-    protected void setUp() throws Exception {
-    }
-
-    protected void tearDown() throws Exception {
-    }
-
-    public void testBasicJavaInvocation() throws Exception {
-        Map<String, Object> result = dispatcher.runSync("testScv", UtilMisc.toMap("message", "Unit Test"));
-        assertEquals("Service result success", ModelService.RESPOND_SUCCESS, result.get(ModelService.RESPONSE_MESSAGE));
+    public void setDispatcher(LocalDispatcher dispatcher) {
+        this.dispatcher = dispatcher;
     }
 }
